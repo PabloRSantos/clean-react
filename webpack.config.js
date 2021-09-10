@@ -54,8 +54,12 @@ module.exports = {
   }, // nao inclui no bundle
   plugins: [
     new CleanWebpackPlugin(),
+    // new DefinePlugin({ 
+    //   'process.env.API_URL': 'http://fordevs.herokuapp.com/api'
+    // }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./public/index.html"),
     }),
+  
   ],
 };
