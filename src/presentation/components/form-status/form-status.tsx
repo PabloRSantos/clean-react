@@ -4,12 +4,13 @@ import { Spinner } from '../spinner/spinner'
 import Styles from './form-status-styles.scss'
 
 export const FormStatus: React.FC = () => {
-  const { state, errorState } = useContext(FormContext)
+  const { state } = useContext(FormContext)
+  const { isLoading, mainError } = state
 
   return (
     <div className={Styles.errorWrap} data-testid='error-wrap'>
-      {state.isLoading && <Spinner className={Styles.spinner}/>}
-      {errorState.main && <span className={Styles.error}>{errorState.main}</span>}
+      {isLoading && <Spinner className={Styles.spinner}/>}
+      {mainError && <span className={Styles.error}>{mainError}</span>}
     </div>
   )
 }
