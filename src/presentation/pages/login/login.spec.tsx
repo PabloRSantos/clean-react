@@ -1,5 +1,4 @@
 import React from 'react'
-import 'jest-localstorage-mock'
 import {
   cleanup,
   render,
@@ -9,7 +8,11 @@ import {
   fireEvent
 } from '@testing-library/react'
 import { Login } from '@/presentation/pages'
-import { AuthenticationSpy, ValidationStub } from '@/presentation/test'
+import {
+  AuthenticationSpy,
+  SaveAccessTokenMock,
+  ValidationStub
+} from '@/presentation/test'
 import faker from 'faker'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { Router } from 'react-router'
@@ -18,6 +21,7 @@ import { createMemoryHistory } from 'history'
 type SutTypes = {
   sut: RenderResult
   authenticationSpy: AuthenticationSpy
+  saveAccessTokenMock: SaveAccessTokenMock
 };
 
 type SutParams = {
@@ -26,18 +30,24 @@ type SutParams = {
 
 const history = createMemoryHistory({ initialEntries: ['/login'] })
 const makeSut = (params?: SutParams): SutTypes => {
+  const saveAccessTokenMock = new SaveAccessTokenMock()
   const validationStub = new ValidationStub()
   const authenticationSpy = new AuthenticationSpy()
   validationStub.errorMessage = params?.validationError
   const sut = render(
     <Router history={history}>
-      <Login validation={validationStub} authentication={authenticationSpy} />
+      <Login
+        saveAccessToken={saveAccessTokenMock}
+        validation={validationStub}
+        authentication={authenticationSpy}
+      />
     </Router>
   )
 
   return {
     sut,
-    authenticationSpy
+    authenticationSpy,
+    saveAccessTokenMock
   }
 }
 
@@ -63,7 +73,10 @@ const populatePasswordField = (password = faker.internet.password()): void => {
   fireEvent.input(passwordInput, { target: { value: password } })
 }
 
-const testStatusForField = (fieldName: string, validationError?: string): void => {
+const testStatusForField = (
+  fieldName: string,
+  validationError?: string
+): void => {
   const fieldStatus = screen.getByTestId(`${fieldName}-status`)
   expect(fieldStatus.title).toBe(validationError || 'Tudo certo!')
   expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '🟢')
@@ -74,7 +87,10 @@ const testErrorWrapChildCount = (count: number): void => {
   expect(errorWrap.childElementCount).toBe(count)
 }
 
-const testButtonIsDisabled = (buttonText: string, isDisabled: boolean): void => {
+const testButtonIsDisabled = (
+  buttonText: string,
+  isDisabled: boolean
+): void => {
   const button = screen.getByRole('button', {
     name: buttonText
   }) as HTMLButtonElement
@@ -83,10 +99,6 @@ const testButtonIsDisabled = (buttonText: string, isDisabled: boolean): void => 
 
 describe('Login Component', () => {
   afterEach(cleanup)
-
-  beforeEach(() => {
-    localStorage.clear()
-  })
 
   test('Should start with initial state', () => {
     const validationError = faker.random.words()
@@ -189,12 +201,14 @@ describe('Login Component', () => {
     testErrorWrapChildCount(1)
   })
 
-  test('Should add accessToken to localstorage on success', async () => {
-    const { authenticationSpy } = makeSut()
+  test('Should call SaveAccessToken on success', async () => {
+    const { authenticationSpy, saveAccessTokenMock } = makeSut()
 
     await waitFor(() => simulateValidSubmit())
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+    expect(saveAccessTokenMock.accessToken).toBe(
+      authenticationSpy.account.accessToken
+    )
     expect(history).toHaveLength(1)
     expect(history.location.pathname).toBe('/')
   })
