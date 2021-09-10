@@ -16,6 +16,7 @@
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "react/jsx-uses-react": "error",
+    "@typescript-eslint/require-await": "off",
     "react/jsx-uses-vars": "error",
     "@typescript-eslint/camelcase": "off",
     "react/display-name": "off"
