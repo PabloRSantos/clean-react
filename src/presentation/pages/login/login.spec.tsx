@@ -3,6 +3,7 @@ import {
   cleanup,
   fireEvent,
   render,
+  screen,
   RenderResult
 } from '@testing-library/react'
 import { Login } from './login'
@@ -32,6 +33,34 @@ const makeSut = (params?: SutParams): SutTypes => {
   }
 }
 
+const simulateValidSubmit = (
+  email = faker.internet.email(),
+  password = faker.internet.password()
+): void => {
+  populateEmailField(email)
+
+  populatePasswordField(password)
+
+  const submitButton = screen.getByRole('button', { name: 'Entrar' })
+  fireEvent.click(submitButton)
+}
+
+const populateEmailField = (email = faker.internet.email()): void => {
+  const emailInput = screen.getByPlaceholderText('Digite seu e-mail')
+  fireEvent.input(emailInput, { target: { value: email } })
+}
+
+const populatePasswordField = (password = faker.internet.password()): void => {
+  const passwordInput = screen.getByPlaceholderText('Digite sua senha')
+  fireEvent.input(passwordInput, { target: { value: password } })
+}
+
+const simulateStatusForField = (fieldName: string, validationError?: string): void => {
+  const fieldStatus = screen.getByTestId(`${fieldName}-status`)
+  expect(fieldStatus.title).toBe(validationError || 'Tudo certo!')
+  expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '🟢')
+}
+
 describe('Login Component', () => {
   afterEach(cleanup)
 
@@ -47,75 +76,41 @@ describe('Login Component', () => {
     }) as HTMLButtonElement
     expect(submitButton.disabled).toBeTruthy()
 
-    const emailStatus = sut.getByTestId('email-status')
-    expect(emailStatus.title).toBe(validationError)
-    expect(emailStatus.textContent).toBe('🔴')
-
-    const passwordStatus = sut.getByTestId('password-status')
-    expect(passwordStatus.title).toBe(validationError)
-    expect(passwordStatus.textContent).toBe('🔴')
+    simulateStatusForField('email', validationError)
+    simulateStatusForField('password', validationError)
   })
 
   test('Should show email error if Validation fails', () => {
     const validationError = faker.random.words()
-    const { sut } = makeSut({ validationError })
-
-    const emailInput = sut.getByPlaceholderText('Digite sua senha')
-    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
-
-    const emailStatus = sut.getByTestId('email-status')
-    expect(emailStatus.title).toBe(validationError)
-    expect(emailStatus.textContent).toBe('🔴')
+    makeSut({ validationError })
+    populateEmailField()
+    simulateStatusForField('email', validationError)
   })
 
   test('Should show password error if Validation fails', () => {
     const validationError = faker.random.words()
-    const { sut } = makeSut({ validationError })
-
-    const passwordInput = sut.getByPlaceholderText('Digite sua senha')
-    fireEvent.input(passwordInput, {
-      target: { value: faker.internet.password() }
-    })
-
-    const passwordStatus = sut.getByTestId('password-status')
-    expect(passwordStatus.title).toBe(validationError)
-    expect(passwordStatus.textContent).toBe('🔴')
+    makeSut({ validationError })
+    populatePasswordField()
+    simulateStatusForField('password', validationError)
   })
 
   test('Should show valid email state if Validation succeeds', () => {
-    const { sut } = makeSut()
-
-    const emailInput = sut.getByPlaceholderText('Digite sua senha')
-    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
-
-    const emailStatus = sut.getByTestId('email-status')
-    expect(emailStatus.title).toBe('Tudo certo!')
-    expect(emailStatus.textContent).toBe('🟢')
+    makeSut()
+    populateEmailField()
+    simulateStatusForField('email')
   })
 
   test('Should show valid password state if Validation succeeds', () => {
-    const { sut } = makeSut()
-
-    const passwordInput = sut.getByPlaceholderText('Digite sua senha')
-    fireEvent.input(passwordInput, {
-      target: { value: faker.internet.password() }
-    })
-
-    const passwordStatus = sut.getByTestId('password-status')
-    expect(passwordStatus.title).toBe('Tudo certo!')
-    expect(passwordStatus.textContent).toBe('🟢')
+    makeSut()
+    populatePasswordField()
+    simulateStatusForField('password')
   })
 
   test('Should enable submit button if form is valid', () => {
     const { sut } = makeSut()
 
-    const emailInput = sut.getByPlaceholderText('Digite seu e-mail')
-    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
-
-    const passwordInput = sut.getByPlaceholderText('Digite sua senha')
-    fireEvent.input(passwordInput, {
-      target: { value: faker.internet.password() }
-    })
+    populateEmailField()
+    populatePasswordField()
 
     const submitButton = sut.getByRole('button', {
       name: 'Entrar'
@@ -125,35 +120,17 @@ describe('Login Component', () => {
 
   test('Should show spinner on submit', () => {
     const { sut } = makeSut()
-
-    const emailInput = sut.getByPlaceholderText('Digite seu e-mail')
-    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
-
-    const passwordInput = sut.getByPlaceholderText('Digite sua senha')
-    fireEvent.input(passwordInput, {
-      target: { value: faker.internet.password() }
-    })
-
-    const submitButton = sut.getByRole('button', { name: 'Entrar' })
-    fireEvent.click(submitButton)
-
+    simulateValidSubmit()
     const spinner = sut.getByTestId('spinner')
     expect(spinner).toBeTruthy()
   })
 
   test('Should call Authentication with correct values', () => {
-    const { sut, authenticationSpy } = makeSut()
+    const { authenticationSpy } = makeSut()
 
     const email = faker.internet.email()
-    const emailInput = sut.getByPlaceholderText('Digite seu e-mail')
-    fireEvent.input(emailInput, { target: { value: email } })
-
     const password = faker.internet.password()
-    const passwordInput = sut.getByPlaceholderText('Digite sua senha')
-    fireEvent.input(passwordInput, { target: { value: password } })
-
-    const submitButton = sut.getByRole('button', { name: 'Entrar' })
-    fireEvent.click(submitButton)
+    simulateValidSubmit(email, password)
 
     expect(authenticationSpy.params).toEqual({
       email,
