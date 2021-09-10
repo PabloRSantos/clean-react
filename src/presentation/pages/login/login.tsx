@@ -2,7 +2,7 @@
 import { Input, FormStatus, Footer, LoginHeader } from '@/presentation/components'
 import { FormContext } from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
-import React, { useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import Styles from './login-styles.scss'
 
 type Props = {
@@ -27,11 +27,16 @@ export const Login: React.FC<Props> = ({ validation }) => {
     })
   }, [state.email, state.password])
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    setState({ ...state, isLoading: true })
+  }
+
   return (
     <div className={Styles.login}>
       <LoginHeader />
       <FormContext.Provider value={{ state, setState }}>
-        <form className={Styles.form}>
+        <form className={Styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
