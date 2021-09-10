@@ -1,6 +1,7 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { DefinePlugin } = require('webpack')
 
 module.exports = {
   mode: "development",
@@ -54,9 +55,9 @@ module.exports = {
   }, // nao inclui no bundle
   plugins: [
     new CleanWebpackPlugin(),
-    // new DefinePlugin({ 
-    //   'process.env.API_URL': 'http://fordevs.herokuapp.com/api'
-    // }),
+    new DefinePlugin({ 
+      'process.env.API_URL': JSON.stringify('http://fordevs.herokuapp.com/api')
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./public/index.html"),
     }),
