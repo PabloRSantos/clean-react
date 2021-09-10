@@ -1,4 +1,5 @@
 import React from 'react'
+import 'jest-localstorage-mock'
 import {
   cleanup,
   fireEvent,
@@ -66,12 +67,16 @@ const simulateStatusForField = (fieldName: string, validationError?: string): vo
 describe('Login Component', () => {
   afterEach(cleanup)
 
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
   test('Should start with initial state', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
 
-    const erorrWrap = sut.getByTestId('error-wrap')
-    expect(erorrWrap.childElementCount).toBe(0)
+    const errorWrap = sut.getByTestId('error-wrap')
+    expect(errorWrap.childElementCount).toBe(0)
 
     const submitButton = sut.getByRole('button', {
       name: 'Entrar'
@@ -174,7 +179,15 @@ describe('Login Component', () => {
     const spinner = sut.queryByTestId('spinner')
     expect(spinner).toBeFalsy()
 
-    const erorrWrap = sut.getByTestId('error-wrap')
-    expect(erorrWrap.childElementCount).toBe(1)
+    const errorWrap = sut.getByTestId('error-wrap')
+    expect(errorWrap.childElementCount).toBe(1)
+  })
+
+  test('Should add accessToken to localstorage on success', async () => {
+    const { authenticationSpy } = makeSut()
+
+    await waitFor(() => simulateValidSubmit())
+
+    expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
   })
 })
