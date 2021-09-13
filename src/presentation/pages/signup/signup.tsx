@@ -16,11 +16,11 @@ type Props = {
 export const SignUp: React.FC<Props> = ({ validation }) => {
   const [state, setState] = useState({
     isLoading: false,
+    name: '',
     nameError: '',
     emailError: 'Campo obrigatório',
     passwordError: 'Campo obrigatório',
     passwordConfirmationError: 'Campo obrigatório',
-    name: '',
     mainError: ''
   })
 

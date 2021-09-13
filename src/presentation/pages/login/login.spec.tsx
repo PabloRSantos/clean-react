@@ -56,22 +56,12 @@ const simulateValidSubmit = (
   email = faker.internet.email(),
   password = faker.internet.password()
 ): void => {
-  populateEmailField(email)
+  Helper.populateField('Digite seu e-mail', email)
 
-  populatePasswordField(password)
+  Helper.populateField('Digite sua senha', password)
 
   const submitButton = screen.getByRole('button', { name: 'Entrar' })
   fireEvent.click(submitButton)
-}
-
-const populateEmailField = (email = faker.internet.email()): void => {
-  const emailInput = screen.getByPlaceholderText('Digite seu e-mail')
-  fireEvent.input(emailInput, { target: { value: email } })
-}
-
-const populatePasswordField = (password = faker.internet.password()): void => {
-  const passwordInput = screen.getByPlaceholderText('Digite sua senha')
-  fireEvent.input(passwordInput, { target: { value: password } })
 }
 
 describe('Login Component', () => {
@@ -92,34 +82,34 @@ describe('Login Component', () => {
   test('Should show email error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    populateEmailField()
+    Helper.populateField('Digite seu e-mail')
     Helper.testStatusForField('email', validationError)
   })
 
   test('Should show password error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    populatePasswordField()
+    Helper.populateField('Digite sua senha')
     Helper.testStatusForField('password', validationError)
   })
 
   test('Should show valid email state if Validation succeeds', () => {
     makeSut()
-    populateEmailField()
+    Helper.populateField('Digite seu e-mail')
     Helper.testStatusForField('email')
   })
 
   test('Should show valid password state if Validation succeeds', () => {
     makeSut()
-    populatePasswordField()
+    Helper.populateField('Digite sua senha')
     Helper.testStatusForField('password')
   })
 
   test('Should enable submit button if form is valid', () => {
     makeSut()
 
-    populateEmailField()
-    populatePasswordField()
+    Helper.populateField('Digite seu e-mail')
+    Helper.populateField('Digite sua senha')
 
     Helper.testButtonIsDisabled('Entrar', false)
   })
