@@ -1,6 +1,8 @@
 import {
+  fireEvent,
   screen
 } from '@testing-library/react'
+import faker from 'faker'
 
 export const testChildCount = (field: string, count: number): void => {
   const el = screen.getByTestId('error-wrap')
@@ -24,4 +26,9 @@ export const testStatusForField = (
   const fieldStatus = screen.getByTestId(`${fieldName}-status`)
   expect(fieldStatus.title).toBe(validationError || 'Tudo certo!')
   expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '🟢')
+}
+
+export const populateField = (placeholder: string, value = faker.random.word()): void => {
+  const input = screen.getByPlaceholderText(placeholder)
+  fireEvent.input(input, { target: { value } })
 }
