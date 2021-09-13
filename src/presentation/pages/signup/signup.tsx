@@ -5,15 +5,23 @@ import {
   LoginHeader
 } from '@/presentation/components'
 import { FormContext } from '@/presentation/contexts/form/form-context'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import Styles from './signup-styles.scss'
 
 export const SignUp: React.FC = () => {
+  const [state] = useState({
+    isLoading: false,
+    nameError: 'Campo obrigatório',
+    emailError: 'Campo obrigatório',
+    passwordError: 'Campo obrigatório',
+    passwordConfirmationError: 'Campo obrigatório',
+    mainError: ''
+  })
+
   return (
     <div className={Styles.signup}>
       <LoginHeader />
-      <FormContext.Provider value={{ state: {} }}>
+      <FormContext.Provider value={{ state }}>
         <form
           className={Styles.form}
         >
@@ -33,10 +41,11 @@ export const SignUp: React.FC = () => {
           <button
             className={Styles.submit}
             type="submit"
+            disabled
           >
             Entrar
           </button>
-          <Link to="/login" className={Styles.link}>Voltar para login</Link>
+          <span className={Styles.link}>Voltar para login</span>
           <FormStatus />
         </form>
       </FormContext.Provider>
