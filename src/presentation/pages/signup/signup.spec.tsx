@@ -1,8 +1,10 @@
 import React from 'react'
 import {
   cleanup,
+  fireEvent,
   render,
-  RenderResult
+  RenderResult,
+  screen
 } from '@testing-library/react'
 import { SignUp } from '@/presentation/pages'
 import { Helper, ValidationStub } from '@/presentation/test'
@@ -29,6 +31,20 @@ const makeSut = (params?: SutParams): SutTypes => {
   return {
     sut
   }
+}
+
+const simulateValidSubmit = (
+  name = faker.name.findName(),
+  email = faker.internet.email(),
+  password = faker.internet.password()
+): void => {
+  Helper.populateField('Digite seu nome', name)
+  Helper.populateField('Digite seu e-mail', email)
+  Helper.populateField('Digite sua senha', password)
+  Helper.populateField('Repita sua senha', password)
+
+  const submitButton = screen.getByRole('button', { name: 'Entrar' })
+  fireEvent.click(submitButton)
 }
 
 describe('SignUp Component', () => {
@@ -106,5 +122,12 @@ describe('SignUp Component', () => {
     Helper.populateField('Repita sua senha')
 
     Helper.testButtonIsDisabled('Entrar', false)
+  })
+
+  test('Should show spinner on submit', () => {
+    const { sut } = makeSut()
+    simulateValidSubmit()
+    const spinner = sut.getByTestId('spinner')
+    expect(spinner).toBeTruthy()
   })
 })
