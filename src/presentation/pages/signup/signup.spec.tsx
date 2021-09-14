@@ -69,7 +69,31 @@ describe('SignUp Component', () => {
   test('Should show passwordConfirmation error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
+    Helper.populateField('Repita sua senha')
+    Helper.testStatusForField('passwordConfirmation', validationError)
+  })
+
+  test('Should show valid name state if Validation succeeds', () => {
+    makeSut()
+    Helper.populateField('Digite seu nome')
+    Helper.testStatusForField('name')
+  })
+
+  test('Should show valid email state if Validation succeeds', () => {
+    makeSut()
+    Helper.populateField('Digite seu e-mail')
+    Helper.testStatusForField('email')
+  })
+
+  test('Should show valid password state if Validation succeeds', () => {
+    makeSut()
     Helper.populateField('Digite sua senha')
-    Helper.testStatusForField('password', validationError)
+    Helper.testStatusForField('password')
+  })
+
+  test('Should show valid passwordConfirmation state if Validation succeeds', () => {
+    makeSut()
+    Helper.populateField('Repita sua senha')
+    Helper.testStatusForField('passwordConfirmation')
   })
 })
