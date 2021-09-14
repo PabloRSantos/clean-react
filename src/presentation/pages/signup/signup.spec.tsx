@@ -96,4 +96,15 @@ describe('SignUp Component', () => {
     Helper.populateField('Repita sua senha')
     Helper.testStatusForField('passwordConfirmation')
   })
+
+  test('Should enable submit button if form is valid', () => {
+    makeSut()
+
+    Helper.populateField('Digite seu nome')
+    Helper.populateField('Digite seu e-mail')
+    Helper.populateField('Digite sua senha')
+    Helper.populateField('Repita sua senha')
+
+    Helper.testButtonIsDisabled('Entrar', false)
+  })
 })
