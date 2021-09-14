@@ -1,4 +1,4 @@
-import { AddAccount } from '@/domain/usecases'
+import { AddAccount, SaveAccessToken } from '@/domain/usecases'
 import {
   Input,
   FormStatus,
@@ -8,14 +8,18 @@ import {
 import { FormContext } from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
 import React, { FormEvent, useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import Styles from './signup-styles.scss'
 
 type Props = {
   validation: Validation
   addAccount: AddAccount
+  saveAcessToken: SaveAccessToken
 };
 
-export const SignUp: React.FC<Props> = ({ validation, addAccount }) => {
+export const SignUp: React.FC<Props> = ({ saveAcessToken, validation, addAccount }) => {
+  const history = useHistory()
+
   const [state, setState] = useState({
     isLoading: false,
     name: '',
@@ -57,12 +61,15 @@ export const SignUp: React.FC<Props> = ({ validation, addAccount }) => {
       ) { return }
       setState({ ...state, isLoading: true })
 
-      await addAccount.add({
+      const account = await addAccount.add({
         name: state.name,
         email: state.email,
         password: state.password,
         passwordConfirmation: state.passwordConfirmation
       })
+
+      await saveAcessToken.save(account.accessToken)
+      history.replace('/')
     } catch (error) {
       setState({
         ...state,
