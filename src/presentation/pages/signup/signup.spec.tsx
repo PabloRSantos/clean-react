@@ -58,7 +58,7 @@ const simulateValidSubmit = (
   Helper.populateField('Digite sua senha', password)
   Helper.populateField('Repita sua senha', password)
 
-  const submitButton = screen.getByRole('button', { name: 'Entrar' })
+  const submitButton = screen.getByRole('button', { name: 'Cadastrar' })
   fireEvent.click(submitButton)
 }
 
@@ -69,7 +69,7 @@ describe('SignUp Component', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
     Helper.testChildCount('error-wrap', 0)
-    Helper.testButtonIsDisabled('Entrar', true)
+    Helper.testButtonIsDisabled('Cadastrar', true)
     Helper.testStatusForField('name', validationError)
     Helper.testStatusForField('email', validationError)
     Helper.testStatusForField('password', validationError)
@@ -136,7 +136,7 @@ describe('SignUp Component', () => {
     Helper.populateField('Digite sua senha')
     Helper.populateField('Repita sua senha')
 
-    Helper.testButtonIsDisabled('Entrar', false)
+    Helper.testButtonIsDisabled('Cadastrar', false)
   })
 
   test('Should show spinner on submit', () => {

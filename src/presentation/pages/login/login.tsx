@@ -3,7 +3,8 @@ import {
   Input,
   FormStatus,
   Footer,
-  LoginHeader
+  LoginHeader,
+  SubmitButton
 } from '@/presentation/components'
 import { FormContext } from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
@@ -21,6 +22,7 @@ export const Login: React.FC<Props> = ({ validation, saveAccessToken, authentica
   const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     email: '',
     password: '',
     emailError: '',
@@ -29,10 +31,14 @@ export const Login: React.FC<Props> = ({ validation, saveAccessToken, authentica
   })
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('password', state.password)
+
     setState({
       ...state,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError
     })
   }, [state.email, state.password])
 
@@ -42,7 +48,7 @@ export const Login: React.FC<Props> = ({ validation, saveAccessToken, authentica
     event.preventDefault()
 
     try {
-      if (state.isLoading || state.emailError || state.passwordError) return
+      if (state.isLoading || state.isFormInvalid) return
       setState({ ...state, isLoading: true })
 
       const account = await authentication.auth({
@@ -77,13 +83,9 @@ export const Login: React.FC<Props> = ({ validation, saveAccessToken, authentica
             name="password"
             placeholder="Digite sua senha"
           />
-          <button
-            className={Styles.submit}
-            disabled={!!state.emailError || !!state.passwordError}
-            type="submit"
-          >
-            Entrar
-          </button>
+          <SubmitButton
+            text="Entrar"
+          />
           <Link to="/signup" className={Styles.link}>Criar conta</Link>
           <FormStatus />
         </form>
