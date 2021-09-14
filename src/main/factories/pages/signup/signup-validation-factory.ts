@@ -6,6 +6,6 @@ export const makeSignUpValidation = (): ValidationComposite => {
     ...ValidationBuilder.field('name').required().min(5).build(),
     ...ValidationBuilder.field('email').required().email().build(),
     ...ValidationBuilder.field('password').required().min(5).build(),
-    ...ValidationBuilder.field('passwordConfirmation').sameAs('password').required().min(5).build()
+    ...ValidationBuilder.field('passwordConfirmation').sameAs('password').required().build()
   ])
 }

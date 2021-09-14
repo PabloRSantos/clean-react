@@ -16,11 +16,11 @@ import Styles from './signup-styles.scss'
 type Props = {
   validation: Validation
   addAccount: AddAccount
-  saveAcessToken: SaveAccessToken
+  saveAccessToken: SaveAccessToken
 };
 
 export const SignUp: React.FC<Props> = ({
-  saveAcessToken,
+  saveAccessToken,
   validation,
   addAccount
 }) => {
@@ -83,7 +83,7 @@ export const SignUp: React.FC<Props> = ({
         passwordConfirmation: state.passwordConfirmation
       })
 
-      await saveAcessToken.save(account.accessToken)
+      await saveAccessToken.save(account.accessToken)
       history.replace('/')
     } catch (error) {
       setState({
