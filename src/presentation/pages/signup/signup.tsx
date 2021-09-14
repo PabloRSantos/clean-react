@@ -13,7 +13,7 @@ import Styles from './signup-styles.scss'
 type Props = {
   validation: Validation
   addAccount: AddAccount
-}
+};
 
 export const SignUp: React.FC<Props> = ({ validation, addAccount }) => {
   const [state, setState] = useState({
@@ -35,7 +35,10 @@ export const SignUp: React.FC<Props> = ({ validation, addAccount }) => {
       nameError: validation.validate('name', state.name),
       emailError: validation.validate('email', state.email),
       passwordError: validation.validate('password', state.password),
-      passwordConfirmationError: validation.validate('passwordConfirmation', state.passwordConfirmation)
+      passwordConfirmationError: validation.validate(
+        'passwordConfirmation',
+        state.passwordConfirmation
+      )
     })
   }, [state.name, state.email, state.password, state.passwordConfirmation])
 
@@ -44,7 +47,13 @@ export const SignUp: React.FC<Props> = ({ validation, addAccount }) => {
   ): Promise<void> => {
     event.preventDefault()
 
-    if (state.isLoading) return
+    if (
+      state.isLoading ||
+      state.nameError ||
+      state.emailError ||
+      state.passwordError ||
+      state.passwordConfirmationError
+    ) { return }
     setState({ ...state, isLoading: true })
 
     await addAccount.add({
@@ -59,10 +68,7 @@ export const SignUp: React.FC<Props> = ({ validation, addAccount }) => {
     <div className={Styles.signup}>
       <LoginHeader />
       <FormContext.Provider value={{ state, setState }}>
-        <form
-          className={Styles.form}
-          onSubmit={handleSubmit}
-        >
+        <form className={Styles.form} onSubmit={handleSubmit}>
           <h2>Criar conta</h2>
           <Input type="text" name="name" placeholder="Digite seu nome" />
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
@@ -79,7 +85,12 @@ export const SignUp: React.FC<Props> = ({ validation, addAccount }) => {
           <button
             className={Styles.submit}
             type="submit"
-            disabled={!!state.nameError || !!state.emailError || !!state.passwordError || !!state.passwordConfirmationError}
+            disabled={
+              !!state.nameError ||
+              !!state.emailError ||
+              !!state.passwordError ||
+              !!state.passwordConfirmationError
+            }
           >
             Entrar
           </button>
