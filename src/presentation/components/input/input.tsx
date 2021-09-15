@@ -26,24 +26,32 @@ export const Input: React.FC<Props> = (props: Props) => {
   }
 
   return (
-    <div className={Styles.inputWrap}>
+    <div
+      data-testid={`${props.name}-wrap`}
+      data-status={error ? 'invalid' : 'valid'}
+      className={Styles.inputWrap}
+    >
       <input
         {...props}
         ref={inputRef}
+        title={error}
         placeholder=" "
         data-testid={props.name}
         onChange={handleChange}
         readOnly
-        onFocus={e => { e.target.readOnly = false }}
+        onFocus={(e) => {
+          e.target.readOnly = false
+        }}
       />
-      <label onClick={() => { inputRef.current.focus() }}>{props.placeholder}</label>
-      <span
-        data-testid={`${props.name}-status`}
-        title={error || 'Tudo certo!'}
-        className={Styles.status}
+      <label
+        data-testid={`${props.name}-label`}
+        title={error}
+        onClick={() => {
+          inputRef.current.focus()
+        }}
       >
-        {error ? '🔴' : '🟢'}
-      </span>
+        {props.placeholder}
+      </label>
     </div>
   )
 }
