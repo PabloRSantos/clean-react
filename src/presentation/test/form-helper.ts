@@ -28,7 +28,7 @@ export const testStatusForField = (
   expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '🟢')
 }
 
-export const populateField = (placeholder: string, value = faker.random.word()): void => {
-  const input = screen.getByPlaceholderText(placeholder)
+export const populateField = (field: string, value = faker.random.word()): void => {
+  const input = screen.getByTestId(field)
   fireEvent.input(input, { target: { value } })
 }

@@ -53,10 +53,10 @@ const simulateValidSubmit = (
   email = faker.internet.email(),
   password = faker.internet.password()
 ): void => {
-  Helper.populateField('Digite seu nome', name)
-  Helper.populateField('Digite seu e-mail', email)
-  Helper.populateField('Digite sua senha', password)
-  Helper.populateField('Repita sua senha', password)
+  Helper.populateField('name', name)
+  Helper.populateField('email', email)
+  Helper.populateField('password', password)
+  Helper.populateField('passwordConfirmation', password)
 
   const submitButton = screen.getByRole('button', { name: 'Cadastrar' })
   fireEvent.click(submitButton)
@@ -79,62 +79,62 @@ describe('SignUp Component', () => {
   test('Should show name error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    Helper.populateField('Digite seu nome')
+    Helper.populateField('name')
     Helper.testStatusForField('name', validationError)
   })
 
   test('Should show email error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    Helper.populateField('Digite seu e-mail')
+    Helper.populateField('email')
     Helper.testStatusForField('email', validationError)
   })
 
   test('Should show password error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    Helper.populateField('Digite sua senha')
+    Helper.populateField('password')
     Helper.testStatusForField('password', validationError)
   })
 
   test('Should show passwordConfirmation error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    Helper.populateField('Repita sua senha')
+    Helper.populateField('passwordConfirmation')
     Helper.testStatusForField('passwordConfirmation', validationError)
   })
 
   test('Should show valid name state if Validation succeeds', () => {
     makeSut()
-    Helper.populateField('Digite seu nome')
+    Helper.populateField('name')
     Helper.testStatusForField('name')
   })
 
   test('Should show valid email state if Validation succeeds', () => {
     makeSut()
-    Helper.populateField('Digite seu e-mail')
+    Helper.populateField('email')
     Helper.testStatusForField('email')
   })
 
   test('Should show valid password state if Validation succeeds', () => {
     makeSut()
-    Helper.populateField('Digite sua senha')
+    Helper.populateField('password')
     Helper.testStatusForField('password')
   })
 
   test('Should show valid passwordConfirmation state if Validation succeeds', () => {
     makeSut()
-    Helper.populateField('Repita sua senha')
+    Helper.populateField('passwordConfirmation')
     Helper.testStatusForField('passwordConfirmation')
   })
 
   test('Should enable submit button if form is valid', () => {
     makeSut()
 
-    Helper.populateField('Digite seu nome')
-    Helper.populateField('Digite seu e-mail')
-    Helper.populateField('Digite sua senha')
-    Helper.populateField('Repita sua senha')
+    Helper.populateField('name')
+    Helper.populateField('email')
+    Helper.populateField('password')
+    Helper.populateField('passwordConfirmation')
 
     Helper.testButtonIsDisabled('Cadastrar', false)
   })

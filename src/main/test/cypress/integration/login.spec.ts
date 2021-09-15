@@ -20,13 +20,13 @@ describe('Login', () => {
   })
 
   it('Should present error state if form is invalid', () => {
-    cy.get('[name=email]').type(faker.random.word())
+    cy.get('[name=email]').focus().type(faker.random.word())
 
     cy.getByTestId('email-status')
       .should('have.attr', 'title', 'Valor inválido')
       .should('contain.text', '🔴')
 
-    cy.get('[name=password]').type(faker.random.alphaNumeric(3))
+    cy.get('[name=password]').focus().type(faker.random.alphaNumeric(3))
 
     cy.getByTestId('password-status')
       .should('have.attr', 'title', 'Valor inválido')
@@ -37,13 +37,13 @@ describe('Login', () => {
   })
 
   it('Should present valid state if form is valid', () => {
-    cy.get('[name=email]').type(faker.internet.email())
+    cy.get('[name=email]').focus().type(faker.internet.email())
 
     cy.getByTestId('email-status')
       .should('have.attr', 'title', 'Tudo certo!')
       .should('contain.text', '🟢')
 
-    cy.get('[name=password]').type(faker.random.alphaNumeric(5))
+    cy.get('[name=password]').focus().type(faker.random.alphaNumeric(5))
 
     cy.getByTestId('password-status')
       .should('have.attr', 'title', 'Tudo certo!')
@@ -54,9 +54,9 @@ describe('Login', () => {
   })
 
   it('Should present error if invalid credentials are provided', () => {
-    cy.get('[name=email]').type(faker.internet.email())
+    cy.get('[name=email]').focus().type(faker.internet.email())
 
-    cy.get('[name=password]').type(faker.random.alphaNumeric(5))
+    cy.get('[name=password]').focus().type(faker.random.alphaNumeric(5))
 
     cy.contains('Entrar').click()
     cy.getByTestId('error-wrap')
@@ -69,9 +69,9 @@ describe('Login', () => {
   })
 
   it('Should save accessToken if valid credentials are provided', () => {
-    cy.get('[name=email]').type('mango@gmail.com')
+    cy.get('[name=email]').focus().type('mango@gmail.com')
 
-    cy.get('[name=password]').type('12345')
+    cy.get('[name=password]').focus().type('12345')
 
     cy.contains('Entrar').click()
 
