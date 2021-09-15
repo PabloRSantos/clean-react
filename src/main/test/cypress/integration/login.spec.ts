@@ -3,6 +3,7 @@ import faker from 'faker'
 const baseUrl: string = Cypress.config().baseUrl
 describe('Login', () => {
   beforeEach(() => {
+    cy.server()
     cy.visit('login')
   })
 
@@ -20,13 +21,13 @@ describe('Login', () => {
   })
 
   it('Should present error state if form is invalid', () => {
-    cy.get('[name=email]').focus().type(faker.random.word())
+    cy.getByTestId('email').focus().type(faker.random.word())
 
     cy.getByTestId('email-status')
       .should('have.attr', 'title', 'Valor inválido')
       .should('contain.text', '🔴')
 
-    cy.get('[name=password]').focus().type(faker.random.alphaNumeric(3))
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(3))
 
     cy.getByTestId('password-status')
       .should('have.attr', 'title', 'Valor inválido')
@@ -37,13 +38,13 @@ describe('Login', () => {
   })
 
   it('Should present valid state if form is valid', () => {
-    cy.get('[name=email]').focus().type(faker.internet.email())
+    cy.getByTestId('email').focus().type(faker.internet.email())
 
     cy.getByTestId('email-status')
       .should('have.attr', 'title', 'Tudo certo!')
       .should('contain.text', '🟢')
 
-    cy.get('[name=password]').focus().type(faker.random.alphaNumeric(5))
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
 
     cy.getByTestId('password-status')
       .should('have.attr', 'title', 'Tudo certo!')
@@ -54,31 +55,43 @@ describe('Login', () => {
   })
 
   it('Should present error if invalid credentials are provided', () => {
-    cy.get('[name=email]').focus().type(faker.internet.email())
-
-    cy.get('[name=password]').focus().type(faker.random.alphaNumeric(5))
+    cy.route({
+      method: 'POST',
+      url: /login/,
+      status: 401,
+      response: {
+        error: faker.random.words()
+      }
+    })
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
 
     cy.contains('Entrar').click()
     cy.getByTestId('error-wrap')
-      .getByTestId('spinner').should('exist')
-      .getByTestId('main-error').should('not.exist')
-      .getByTestId('spinner').should('not.exist')
-      .getByTestId('main-error').should('contain.text', 'Credenciais inválidas')
+    cy.getByTestId('spinner').should('not.exist')
+    cy.getByTestId('main-error').should('contain.text', 'Credenciais inválidas')
 
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
   it('Should save accessToken if valid credentials are provided', () => {
-    cy.get('[name=email]').focus().type('mango@gmail.com')
+    cy.route({
+      method: 'POST',
+      url: /login/,
+      status: 200,
+      response: {
+        accessToken: faker.datatype.uuid()
+      }
+    })
+    cy.getByTestId('email').focus().type('mango@gmail.com')
 
-    cy.get('[name=password]').focus().type('12345')
+    cy.getByTestId('password').focus().type('12345')
 
     cy.contains('Entrar').click()
 
     cy.getByTestId('error-wrap')
-      .getByTestId('spinner').should('exist')
-      .getByTestId('main-error').should('not.exist')
-      .getByTestId('spinner').should('not.exist')
+    cy.getByTestId('main-error').should('not.exist')
+    cy.getByTestId('spinner').should('not.exist')
 
     cy.url().should('eq', `${baseUrl}/`)
     cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
