@@ -16,5 +16,6 @@
       "paths": {
         "@/*": ["*"]
       }
-    }
+    },
+    "exclude": ["./coverage/", "node_modules", "src/main/test/cypress"]
   }
