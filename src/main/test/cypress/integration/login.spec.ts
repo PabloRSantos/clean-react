@@ -36,4 +36,23 @@ describe('Login', () => {
     cy.contains('Entrar').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
+
+  it('Should present valid state if form is valid', () => {
+    cy.get('[name=email]')
+      .type(faker.internet.email())
+
+    cy.getByTestId('email-status')
+      .should('have.attr', 'title', 'Tudo certo!')
+      .should('contain.text', '🟢')
+
+    cy.get('[name=password]')
+      .type(faker.random.alphaNumeric(5))
+
+    cy.getByTestId('password-status')
+      .should('have.attr', 'title', 'Tudo certo!')
+      .should('contain.text', '🟢')
+
+    cy.contains('Entrar').should('not.have.attr', 'disabled')
+    cy.getByTestId('error-wrap').should('not.have.descendants')
+  })
 })
