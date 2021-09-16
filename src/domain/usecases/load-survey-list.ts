@@ -1,5 +1,5 @@
-import { SurveyModal } from '@/domain/models'
+import { SurveyModel } from '../models'
 
 export interface LoadSurveyList {
-  loadAll(): Promise<SurveyModal[]>
+  loadAll(): Promise<SurveyModel[]>
 }
