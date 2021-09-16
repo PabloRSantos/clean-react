@@ -95,7 +95,7 @@ export const SignUp: React.FC<Props> = ({
   }
 
   return (
-    <div className={Styles.signup}>
+    <div className={Styles.signupWrap}>
       <LoginHeader />
       <FormContext.Provider value={{ state, setState }}>
         <form className={Styles.form} onSubmit={handleSubmit}>
