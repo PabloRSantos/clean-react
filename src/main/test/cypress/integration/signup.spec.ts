@@ -104,13 +104,13 @@ describe('SignUp', () => {
     FormHelper.testUrl('/signup')
   })
 
-  it('Should save accessToken if valid credentials are provided', () => {
+  it('Should save account if valid credentials are provided', () => {
     Http.mockOk()
     simulateValidSubmit()
 
     cy.getByTestId('error-wrap').should('not.have.descendants')
     FormHelper.testUrl('/')
-    FormHelper.testLocalStorageItem('accessToken')
+    FormHelper.testLocalStorageItem('account')
   })
 
   it('Should prevent multiple submits', () => {

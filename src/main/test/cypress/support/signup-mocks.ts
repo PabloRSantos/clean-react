@@ -14,7 +14,8 @@ export const mockUnexpectedError = (): void => {
 export const mockOk = (): void => {
   cy.server()
   Helper.mockOk(/signup/, 'POST', {
-    accessToken: faker.datatype.uuid()
+    accessToken: faker.datatype.uuid(),
+    name: faker.name.findName()
   })
 }
 

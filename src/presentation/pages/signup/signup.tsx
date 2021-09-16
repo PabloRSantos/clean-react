@@ -1,4 +1,4 @@
-import { AddAccount, SaveAccessToken } from '@/domain/usecases'
+import { AddAccount, UpdateCurrentAccount } from '@/domain/usecases'
 import {
   Input,
   FormStatus,
@@ -16,11 +16,11 @@ import Styles from './signup-styles.scss'
 type Props = {
   validation: Validation
   addAccount: AddAccount
-  saveAccessToken: SaveAccessToken
+  updateCurrentAccount: UpdateCurrentAccount
 };
 
 export const SignUp: React.FC<Props> = ({
-  saveAccessToken,
+  updateCurrentAccount,
   validation,
   addAccount
 }) => {
@@ -83,7 +83,7 @@ export const SignUp: React.FC<Props> = ({
         passwordConfirmation: state.passwordConfirmation
       })
 
-      await saveAccessToken.save(account.accessToken)
+      await updateCurrentAccount.save(account)
       history.replace('/')
     } catch (error) {
       setState({

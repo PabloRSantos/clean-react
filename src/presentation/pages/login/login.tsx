@@ -1,4 +1,4 @@
-import { Authentication, SaveAccessToken } from '@/domain/usecases'
+import { Authentication, UpdateCurrentAccount } from '@/domain/usecases'
 import {
   Input,
   FormStatus,
@@ -15,10 +15,10 @@ import Styles from './login-styles.scss'
 type Props = {
   validation: Validation
   authentication: Authentication
-  saveAccessToken: SaveAccessToken
+  updateCurrentAccount: UpdateCurrentAccount
 };
 
-export const Login: React.FC<Props> = ({ validation, saveAccessToken, authentication }) => {
+export const Login: React.FC<Props> = ({ validation, updateCurrentAccount, authentication }) => {
   const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
@@ -58,7 +58,7 @@ export const Login: React.FC<Props> = ({ validation, saveAccessToken, authentica
         password: state.password
       })
 
-      await saveAccessToken.save(account.accessToken)
+      await updateCurrentAccount.save(account)
       history.replace('/')
     } catch (error) {
       setState({
