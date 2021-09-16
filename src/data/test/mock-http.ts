@@ -1,6 +1,14 @@
 import { HttpPostClient, HttpResponse, HttpStatusCode, HttpPostParams, HttpGetClient, HttpGetParams } from '@/data/protocols/http'
 import faker from 'faker'
 
+export const mockPostRequest = (): HttpPostParams => ({
+  url: faker.internet.url(),
+  body: faker.random.objectElement()
+})
+
+export const mockGetRequest = (): HttpGetParams => ({
+  url: faker.internet.url()
+})
 export class HttpPostClientSpy<R = any> implements HttpPostClient<R> {
   url?: string
   body?: any
@@ -28,8 +36,3 @@ export class HttpGetClientSpy<R = any> implements HttpGetClient<R> {
     return Promise.resolve(this.response)
   }
 }
-
-export const mockPostRequest = (): HttpPostParams => ({
-  url: faker.internet.url(),
-  body: faker.random.objectElement()
-})
