@@ -1,8 +1,11 @@
-import React from 'react'
+import { ApiContext } from '@/presentation/contexts'
+import React, { useContext } from 'react'
 import { Redirect, Route, RouteProps } from 'react-router'
 
 const PrivateRoute: React.FC<RouteProps> = (props) => {
-  return <Route {...props} component={() => <Redirect to="/login" />} />
+  const { getCurrentAccount } = useContext(ApiContext)
+
+  return getCurrentAccount()?.accessToken ? <Route {...props} /> : <Route {...props} component={() => <Redirect to="/login" />} />
 }
 
 export { PrivateRoute }
