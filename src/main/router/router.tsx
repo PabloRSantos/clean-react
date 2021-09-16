@@ -8,6 +8,7 @@ import {
   getCurrentAccountAdapter,
   setCurrentAccountAdapter
 } from '@/main/adapters/current-account-adapter'
+import { PrivateRoute } from '@/presentation/components'
 
 export const Router: React.FC = () => {
   return (
@@ -21,7 +22,7 @@ export const Router: React.FC = () => {
         <Switch>
           <Route path="/login" component={makeLogin} exact />
           <Route path="/signup" component={makeSignUp} exact />
-          <Route path="/" component={SurveyList} exact />
+          <PrivateRoute path="/" component={SurveyList} exact />
         </Switch>
       </BrowserRouter>
     </ApiContext.Provider>
