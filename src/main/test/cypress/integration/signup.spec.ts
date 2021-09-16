@@ -39,4 +39,22 @@ describe('SignUp', () => {
     cy.contains('Cadastrar').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
+
+  it('Should present valid state if form is valid', () => {
+    cy.getByTestId('name').focus().type(faker.name.findName())
+    FormHelper.testInputStatus('name')
+
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    FormHelper.testInputStatus('email')
+
+    const password = faker.random.alphaNumeric(5)
+    cy.getByTestId('password').focus().type(password)
+    FormHelper.testInputStatus('password')
+
+    cy.getByTestId('passwordConfirmation').focus().type(password)
+    FormHelper.testInputStatus('passwordConfirmation')
+
+    cy.contains('Cadastrar').should('not.have.attr', 'disabled')
+    cy.getByTestId('error-wrap').should('not.have.descendants')
+  })
 })
