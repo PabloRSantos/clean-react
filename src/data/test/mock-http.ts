@@ -18,10 +18,14 @@ export class HttpPostClientSpy<R = any> implements HttpPostClient<R> {
 
 export class HttpGetClientSpy<R = any> implements HttpGetClient<R> {
   url?: string
+  response: HttpResponse<R> = {
+    statusCode: HttpStatusCode.ok
+  }
+
   async get (params: HttpGetParams): Promise<HttpResponse<R>> {
     this.url = params.url
 
-    return Promise.resolve(null)
+    return Promise.resolve(this.response)
   }
 }
 
