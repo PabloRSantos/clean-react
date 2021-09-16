@@ -1,9 +1,7 @@
 import React from 'react'
 import {
-  cleanup,
   fireEvent,
   render,
-  RenderResult,
   screen,
   waitFor
 } from '@testing-library/react'
@@ -17,7 +15,6 @@ import { AccountModel } from '@/domain/models'
 import { ApiContext } from '@/presentation/contexts'
 
 type SutTypes = {
-  sut: RenderResult
   addAccountSpy: AddAccountSpy
   setCurrentAccountMock: (account: AccountModel) => void
 };
@@ -32,7 +29,7 @@ const makeSut = (params?: SutParams): SutTypes => {
   validationStub.errorMessage = params?.validationError
   const setCurrentAccountMock = jest.fn()
   const addAccountSpy = new AddAccountSpy()
-  const sut = render(
+  render(
     <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
       <Router history={history}>
         <SignUp
@@ -44,7 +41,6 @@ const makeSut = (params?: SutParams): SutTypes => {
   )
 
   return {
-    sut,
     addAccountSpy,
     setCurrentAccountMock
   }
@@ -65,8 +61,6 @@ const simulateValidSubmit = (
 }
 
 describe('SignUp Component', () => {
-  afterEach(cleanup)
-
   test('Should start with initial state', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
@@ -142,9 +136,9 @@ describe('SignUp Component', () => {
   })
 
   test('Should show spinner on submit', () => {
-    const { sut } = makeSut()
+    makeSut()
     simulateValidSubmit()
-    const spinner = sut.getByTestId('spinner')
+    const spinner = screen.getByTestId('spinner')
     expect(spinner).toBeTruthy()
   })
 
@@ -183,16 +177,16 @@ describe('SignUp Component', () => {
   })
 
   test('Should present error if AddAccount fails', async () => {
-    const { addAccountSpy, sut } = makeSut()
+    const { addAccountSpy } = makeSut()
     const error = new EmailInUseError()
     jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
 
     await waitFor(() => simulateValidSubmit())
 
-    const mainError = sut.getByText(error.message)
+    const mainError = screen.getByText(error.message)
     expect(mainError).toBeTruthy()
 
-    const spinner = sut.queryByTestId('spinner')
+    const spinner = screen.queryByTestId('spinner')
     expect(spinner).toBeFalsy()
 
     Helper.testChildCount('error-wrap', 1)
@@ -211,9 +205,9 @@ describe('SignUp Component', () => {
   })
 
   test('Should go to login page', () => {
-    const { sut } = makeSut()
+    makeSut()
 
-    const loginLink = sut.getByText(/voltar para login/i)
+    const loginLink = screen.getByText(/voltar para login/i)
     fireEvent.click(loginLink)
 
     expect(history).toHaveLength(1)
