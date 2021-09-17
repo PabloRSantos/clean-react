@@ -25,4 +25,10 @@ describe('SurveyListComponent', () => {
     const { loadSurveyListSpy } = makeSut()
     expect(loadSurveyListSpy.callsCount).toBe(1)
   })
+
+  test('Should render SurveyItems on success', async () => {
+    const { loadSurveyListSpy } = makeSut()
+    const surveyItems = await screen.findAllByTestId('survey-item')
+    expect(surveyItems).toHaveLength(loadSurveyListSpy.surveys.length)
+  })
 })
