@@ -11,7 +11,7 @@ export const SurveyItem: React.FC<Props> = ({ survey }) => {
   const iconName = survey.didAnswer ? IconName.thumbUp : IconName.thumbDown
 
   return (
-    <li className={Styles.surveyItemWrap}>
+    <li className={Styles.surveyItemWrap} data-testid="survey-item">
       <div className={Styles.surveyContent}>
         <Icon className={Styles.iconWrap} iconName={iconName} />
         <time>
