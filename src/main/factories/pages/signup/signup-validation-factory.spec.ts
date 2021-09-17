@@ -1,5 +1,5 @@
-import { ValidationBuilder } from '@/validation/builder/validation-builder'
-import { ValidationComposite } from '@/validation/validators'
+import { EmailValidation, MinLengthValidation, RequiredFieldValidation, ValidationComposite } from '@/validation/validators'
+import { CompareFieldsValidation } from '@/validation/validators/compare-fields/compare-fields-validation'
 import { makeSignUpValidation } from './signup-validation-factory'
 
 describe('SignUpValidationFactory', () => {
@@ -8,10 +8,14 @@ describe('SignUpValidationFactory', () => {
 
     expect(composite).toEqual(
       ValidationComposite.build([
-        ...ValidationBuilder.field('name').required().min(5).build(),
-        ...ValidationBuilder.field('email').required().email().build(),
-        ...ValidationBuilder.field('password').required().min(5).build(),
-        ...ValidationBuilder.field('passwordConfirmation').sameAs('password').required().build()
+        new RequiredFieldValidation('name'),
+        new MinLengthValidation('name', 5),
+        new RequiredFieldValidation('email'),
+        new EmailValidation('email'),
+        new RequiredFieldValidation('password'),
+        new MinLengthValidation('password', 5),
+        new CompareFieldsValidation('passwordConfirmation', 'password'),
+        new RequiredFieldValidation('passwordConfirmation')
       ])
     )
   })
