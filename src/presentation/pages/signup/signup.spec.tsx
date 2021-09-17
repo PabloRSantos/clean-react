@@ -11,12 +11,12 @@ import faker from 'faker'
 import { EmailInUseError } from '@/domain/errors'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { AccountModel } from '@/domain/models'
 import { ApiContext } from '@/presentation/contexts'
+import { AddAccount } from '@/domain/usecases'
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy
-  setCurrentAccountMock: (account: AccountModel) => void
+  setCurrentAccountMock: (account: AddAccount.Model) => void
 };
 
 type SutParams = {

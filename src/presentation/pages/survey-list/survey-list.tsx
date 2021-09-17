@@ -3,14 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { List, SurveyContext, Error } from '@/presentation/pages/survey-list/components'
 import Styles from './survey-list-styles.scss'
 import { LoadSurveyList } from '@/domain/usecases/load-survey-list'
-import { SurveyModel } from '@/domain/models'
 
 type Props = {
   loadSurveyList: LoadSurveyList
 }
 
 type State = {
-  surveys: SurveyModel[]
+  surveys: LoadSurveyList.Model[]
   error: string
   reload: boolean
 }

@@ -24,6 +24,9 @@
     "react/jsx-uses-vars": "error",
     "@typescript-eslint/camelcase": "off",
     "react/display-name": "off",
-    "@typescript-eslint/no-floating-promises": "off"
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "no-redeclare": "off",
+    "import/export": "off"
   }
 }
