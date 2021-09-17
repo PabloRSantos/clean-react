@@ -50,13 +50,13 @@ describe('AxiosHttpClient', () => {
     })
   })
 
-  describe('post', () => {
+  describe('get', () => {
     test('Should call axios.get with correct values', async () => {
       const request = mockGetRequest()
       const { sut, mockedAxios } = makeSut()
       await sut.get(request)
 
-      expect(mockedAxios.get).toHaveBeenCalledWith(request.url)
+      expect(mockedAxios.get).toHaveBeenCalledWith(request.url, { headers: request.headers })
     })
 
     test('Should return the correct response on axios.get', async () => {
