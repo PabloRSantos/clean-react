@@ -23,6 +23,7 @@
     "@typescript-eslint/require-await": "off",
     "react/jsx-uses-vars": "error",
     "@typescript-eslint/camelcase": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "@typescript-eslint/no-floating-promises": "off"
   }
 }
