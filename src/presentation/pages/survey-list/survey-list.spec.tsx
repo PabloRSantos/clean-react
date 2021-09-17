@@ -1,6 +1,6 @@
 import React from 'react'
 import { LoadSurveyListSpy } from '@/presentation/test/mock-load-survey-list'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { SurveyList } from '..'
 import { UnexpectedError } from '@/domain/errors'
 
@@ -43,5 +43,15 @@ describe('SurveyListComponent', () => {
 
     expect(await screen.findByText(error.message)).toBeInTheDocument()
     expect(screen.queryByRole('list')).not.toBeInTheDocument()
+  })
+
+  test('Should call LoadSurveyList on reload', async () => {
+    const loadSurveyListSpy = new LoadSurveyListSpy()
+    jest.spyOn(loadSurveyListSpy, 'loadAll').mockRejectedValueOnce(new UnexpectedError())
+    makeSut(loadSurveyListSpy)
+
+    expect(await screen.findByRole('list')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText(/recarregar/i))
+    expect(loadSurveyListSpy.callsCount).toBe(1)
   })
 })
