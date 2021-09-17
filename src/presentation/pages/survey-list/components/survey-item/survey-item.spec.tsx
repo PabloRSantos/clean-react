@@ -28,4 +28,24 @@ describe('SurveyItem Component', () => {
     expect(spanMonth).toBeInTheDocument()
     expect(spanYear).toBeInTheDocument()
   })
+
+  test('Should render with correct values', () => {
+    const survey = {
+      ...mockSurveyModel(),
+      didAnswer: false,
+      date: new Date('2019-05-03T00:00:00')
+    }
+    makeSut(survey)
+
+    expect(screen.getByRole('img')).toHaveProperty('src', IconName.thumbDown)
+    expect(screen.getByText(survey.question)).toBeInTheDocument()
+
+    const spanDay = screen.getByText('03')
+    const spanMonth = screen.getByText('mai')
+    const spanYear = screen.getByText('2019')
+
+    expect(spanDay).toBeInTheDocument()
+    expect(spanMonth).toBeInTheDocument()
+    expect(spanYear).toBeInTheDocument()
+  })
 })
