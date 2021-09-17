@@ -1,6 +1,6 @@
 import React from 'react'
 import { LoadSurveyListSpy } from '@/presentation/test/mock-load-survey-list'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { SurveyList } from '..'
 import { UnexpectedError } from '@/domain/errors'
 
@@ -15,16 +15,20 @@ const makeSut = (loadSurveyListSpy = new LoadSurveyListSpy()): SutTypes => {
 }
 
 describe('SurveyListComponent', () => {
-  test('Should present 4 empty items on start', () => {
+  test('Should present 4 empty items on start', async () => {
     makeSut()
     const surveyList = screen.getByRole('list')
-    expect(surveyList.querySelectorAll('li:empty')).toHaveLength(4)
+    await waitFor(() => {
+      expect(surveyList.querySelectorAll('li:empty')).toHaveLength(4)
+    })
     expect(screen.queryByRole('button', { name: /recarregar/i })).not.toBeInTheDocument()
   })
 
-  test('Should call LoadSurveyList', () => {
+  test('Should call LoadSurveyList', async () => {
     const { loadSurveyListSpy } = makeSut()
-    expect(loadSurveyListSpy.callsCount).toBe(1)
+    await waitFor(() => {
+      expect(loadSurveyListSpy.callsCount).toBe(1)
+    })
   })
 
   test('Should render SurveyItems on success', async () => {
@@ -50,8 +54,10 @@ describe('SurveyListComponent', () => {
     jest.spyOn(loadSurveyListSpy, 'loadAll').mockRejectedValueOnce(new UnexpectedError())
     makeSut(loadSurveyListSpy)
 
-    expect(await screen.findByRole('list')).not.toBeInTheDocument()
-    fireEvent.click(screen.getByText(/recarregar/i))
-    expect(loadSurveyListSpy.callsCount).toBe(1)
+    fireEvent.click(await screen.findByText(/recarregar/i))
+
+    await waitFor(() => {
+      expect(loadSurveyListSpy.callsCount).toBe(1)
+    })
   })
 })
