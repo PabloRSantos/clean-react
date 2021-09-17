@@ -1,9 +1,17 @@
-import { render, screen } from '@testing-library/react'
 import React from 'react'
+import { LoadSurveyListSpy } from '@/presentation/test/mock-load-survey-list'
+import { render, screen } from '@testing-library/react'
 import { SurveyList } from '..'
 
-const makeSut = (): void => {
-  render(<SurveyList />)
+type SutTypes = {
+  loadSurveyListSpy: LoadSurveyListSpy
+}
+
+const makeSut = (): SutTypes => {
+  const loadSurveyListSpy = new LoadSurveyListSpy()
+  render(<SurveyList loadSurveyList={loadSurveyListSpy} />)
+
+  return { loadSurveyListSpy }
 }
 
 describe('SurveyListComponent', () => {
@@ -11,5 +19,10 @@ describe('SurveyListComponent', () => {
     makeSut()
     const surveyList = screen.getByRole('list')
     expect(surveyList.querySelectorAll('li:empty')).toHaveLength(4)
+  })
+
+  test('Should call LoadSurveyList', () => {
+    const { loadSurveyListSpy } = makeSut()
+    expect(loadSurveyListSpy.callsCount).toBe(1)
   })
 })
