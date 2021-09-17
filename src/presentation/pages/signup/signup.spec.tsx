@@ -64,8 +64,12 @@ describe('SignUp Component', () => {
   test('Should start with initial state', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    Helper.testChildCount('error-wrap', 0)
-    Helper.testButtonIsDisabled('Cadastrar', true)
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(0)
+
+    const button = screen.getByRole('button', {
+      name: /cadastrar/i
+    })
+    expect(button).toBeDisabled()
     Helper.testStatusForField('name', validationError)
     Helper.testStatusForField('email', validationError)
     Helper.testStatusForField('password', validationError)
@@ -132,7 +136,10 @@ describe('SignUp Component', () => {
     Helper.populateField('password')
     Helper.populateField('passwordConfirmation')
 
-    Helper.testButtonIsDisabled('Cadastrar', false)
+    const button = screen.getByRole('button', {
+      name: /cadastrar/i
+    })
+    expect(button).toBeEnabled()
   })
 
   test('Should show spinner on submit', () => {
@@ -189,7 +196,7 @@ describe('SignUp Component', () => {
     const spinner = screen.queryByTestId('spinner')
     expect(spinner).toBeFalsy()
 
-    Helper.testChildCount('error-wrap', 1)
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
   })
 
   test('Should call SaveAccessToken on success', async () => {

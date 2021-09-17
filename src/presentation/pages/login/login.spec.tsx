@@ -68,9 +68,12 @@ describe('Login Component', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
 
-    Helper.testChildCount('error-wrap', 0)
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(0)
 
-    Helper.testButtonIsDisabled('Entrar', true)
+    const button = screen.getByRole('button', {
+      name: /entrar/i
+    })
+    expect(button).toBeDisabled()
 
     Helper.testStatusForField('email', validationError)
     Helper.testStatusForField('password', validationError)
@@ -108,7 +111,10 @@ describe('Login Component', () => {
     Helper.populateField('email')
     Helper.populateField('password')
 
-    Helper.testButtonIsDisabled('Entrar', false)
+    const button = screen.getByRole('button', {
+      name: /entrar/i
+    })
+    expect(button).toBeEnabled()
   })
 
   test('Should show spinner on submit', () => {
@@ -157,12 +163,12 @@ describe('Login Component', () => {
     await waitFor(() => simulateValidSubmit())
 
     const mainError = screen.getByText(error.message)
-    expect(mainError).toBeTruthy()
+    expect(mainError).toBeInTheDocument()
 
     const spinner = screen.queryByTestId('spinner')
     expect(spinner).toBeFalsy()
 
-    Helper.testChildCount('error-wrap', 1)
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
   })
 
   test('Should call UpdateCurrentAccount on success', async () => {
