@@ -1,7 +1,7 @@
 import { SignUp } from '@/presentation/pages'
 import React from 'react'
+import { makeRemoteAddAccount } from '@/main/factories/usecases'
 import { makeSignUpValidation } from './signup-validation-factory'
-import { makeRemoteAddAccount } from '../../usecases/add-account/remote-add-account-factory'
 
 export const makeSignUp: React.FC = () => {
   return (
