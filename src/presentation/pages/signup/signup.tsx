@@ -51,8 +51,8 @@ export const SignUp: React.FC<Props> = ({
       'passwordConfirmation',
       formData
     )
-    setState({
-      ...state,
+    setState(oldState => ({
+      ...oldState,
       nameError,
       emailError,
       passwordError,
@@ -62,7 +62,7 @@ export const SignUp: React.FC<Props> = ({
         !!emailError ||
         !!passwordError ||
         !!passwordConfirmationError
-    })
+    }))
   }, [state.name, state.email, state.password, state.passwordConfirmation])
 
   const handleSubmit = async (

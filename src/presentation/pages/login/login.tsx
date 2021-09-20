@@ -37,12 +37,12 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
     const emailError = validation.validate('email', formData)
     const passwordError = validation.validate('password', formData)
 
-    setState({
-      ...state,
+    setState(oldState => ({
+      ...oldState,
       emailError,
       passwordError,
       isFormInvalid: !!emailError || !!passwordError
-    })
+    }))
   }, [state.email, state.password])
 
   const handleSubmit = async (
