@@ -122,6 +122,7 @@ describe('SignUp', () => {
     mockSuccess()
     populateFields()
     cy.contains('Cadastrar').dblclick()
+    cy.wait('@request')
     Helper.testHttpCallsCont(1)
   })
 

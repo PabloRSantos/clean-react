@@ -37,7 +37,7 @@ module.exports = merge(common, {
     static: {
       directory: "./public",
     },
-    open: true,
+    port: 8080,
     historyApiFallback: true,
   },
   plugins: [

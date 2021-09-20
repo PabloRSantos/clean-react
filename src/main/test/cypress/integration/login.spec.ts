@@ -100,6 +100,7 @@ describe('Login', () => {
     mockSuccess()
     populateFields()
     cy.contains('Entrar').dblclick()
+    cy.wait('@request')
     Helper.testHttpCallsCont(1)
   })
 
