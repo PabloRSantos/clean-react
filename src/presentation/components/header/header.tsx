@@ -18,8 +18,8 @@ const Header: React.FC = memo(() => {
       <div className={Styles.headerContent}>
         <Logo />
         <div className={Styles.logoutWrap}>
-          <span>{getCurrentAccount().name}</span>
-          <a href="#" onClick={handleLogout} >Sair</a>
+          <span data-testid="username">{getCurrentAccount().name}</span>
+          <a href="#" data-testid="logout" onClick={handleLogout} >Sair</a>
         </div>
       </div>
     </header>
