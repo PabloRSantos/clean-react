@@ -10,11 +10,18 @@ export class RemoteLoadSurveyResult implements LoadSurveyResult {
 
   async load (): Promise<LoadSurveyResult.Model> {
     const httpResponse = await this.httpGetClient.get({ url: this.url })
+    const remoteSurveyResult = httpResponse.body
 
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return null
-      case HttpStatusCode.forbidden: throw new AccessDeniedError()
-      default: throw new UnexpectedError()
+      case HttpStatusCode.ok:
+        return {
+          ...remoteSurveyResult,
+          date: new Date(remoteSurveyResult.date)
+        }
+      case HttpStatusCode.forbidden:
+        throw new AccessDeniedError()
+      default:
+        throw new UnexpectedError()
     }
   }
 }
@@ -23,11 +30,11 @@ export namespace RemoteLoadSurveyResult {
   export type Model = {
     question: string
     date: string
-    answers: [{
+    answers: Array<{
       image?: string
       answer: string
       count: number
       percent: number
-    }]
-  }
+    }>
+  };
 }
