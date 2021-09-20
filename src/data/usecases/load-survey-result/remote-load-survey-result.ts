@@ -1,4 +1,5 @@
-import { HttpGetClient } from '@/data/protocols/http'
+import { HttpGetClient, HttpStatusCode } from '@/data/protocols/http'
+import { AccessDeniedError } from '@/domain/errors'
 import { LoadSurveyResult } from '@/domain/usecases'
 
 export class RemoteLoadSurveyResult implements LoadSurveyResult {
@@ -8,8 +9,12 @@ export class RemoteLoadSurveyResult implements LoadSurveyResult {
   ) {}
 
   async load (): Promise<LoadSurveyResult.Model> {
-    await this.httpGetClient.get({ url: this.url })
-    return null
+    const httpResponse = await this.httpGetClient.get({ url: this.url })
+
+    switch (httpResponse.statusCode) {
+      case HttpStatusCode.ok: return null
+      default: throw new AccessDeniedError()
+    }
   }
 }
 
