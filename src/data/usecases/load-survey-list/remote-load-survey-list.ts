@@ -11,7 +11,7 @@ export class RemoteLoadSurveyList implements LoadSurveyList {
   async loadAll (): Promise<LoadSurveyList.Model[]> {
     const httpResponse = await this.httpGetClient.get({ url: this.url })
 
-    const remoteSurveys = httpResponse?.body || []
+    const remoteSurveys = httpResponse.body || []
 
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok: return remoteSurveys.map(response => ({ ...response, date: new Date(response.date) }))

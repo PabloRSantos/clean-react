@@ -1,27 +1,20 @@
 import faker from 'faker'
-import * as Helper from './http-mocks'
+import * as Http from './http-mocks'
 
 export const mockInvalidCredentialsError = (): void => {
   cy.server()
-  Helper.mockInvalidCredentialsError(/login/)
+  Http.mockUnauthorizedError(/login/)
 }
 
 export const mockUnexpectedError = (): void => {
   cy.server()
-  Helper.mockUnexpectedError(/login/, 'POST')
+  Http.mockServerError(/login/, 'POST')
 }
 
 export const mockOk = (): void => {
   cy.server()
-  Helper.mockOk(/login/, 'POST', {
+  Http.mockOk(/login/, 'POST', {
     accessToken: faker.datatype.uuid(),
     name: faker.name.findName()
-  })
-}
-
-export const mockInvalidData = (): void => {
-  cy.server()
-  Helper.mockOk(/login/, 'POST', {
-    invalidProperty: faker.random.words()
   })
 }
