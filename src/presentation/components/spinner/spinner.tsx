@@ -5,8 +5,8 @@ type Props = HTMLAttributes<HTMLElement> & {
   isNegative?: boolean
 };
 
-export const Spinner: React.FC<Props> = (props: Props) => {
-  const negativeClass = props.isNegative ? Styles.negative : ''
+export const Spinner: React.FC<Props> = ({ isNegative, ...props }) => {
+  const negativeClass = isNegative ? Styles.negative : ''
 
   return (
     <div data-testid='spinner' {...props} className={[Styles.spinner, props.className, negativeClass].join(' ')}>
