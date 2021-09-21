@@ -1,11 +1,25 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { SurveyItem } from './survey-item'
 import { mockSurveyModel } from '@/domain/test'
 import { IconName } from '@/presentation/components'
+import { Router } from 'react-router'
+import { createMemoryHistory, MemoryHistory } from 'history'
 
-const makeSut = (survey = mockSurveyModel()): void => {
-  render(<SurveyItem survey={survey}/>)
+type SutTypes = {
+  history: MemoryHistory
+}
+
+const makeSut = (survey = mockSurveyModel()): SutTypes => {
+  const history = createMemoryHistory({ initialEntries: ['/'] })
+
+  render(
+    <Router history={history}>
+      <SurveyItem survey={survey}/>
+    </Router>
+  )
+
+  return { history }
 }
 
 describe('SurveyItem Component', () => {
@@ -46,5 +60,13 @@ describe('SurveyItem Component', () => {
     expect(spanDay).toBeInTheDocument()
     expect(spanMonth).toBeInTheDocument()
     expect(spanYear).toBeInTheDocument()
+  })
+
+  test('Should go to SurveyResult', () => {
+    const survey = mockSurveyModel()
+    const { history } = makeSut(survey)
+
+    fireEvent.click(screen.getByText(/ver resultado/i))
+    expect(history.location.pathname).toBe(`/surveys/${survey.id}`)
   })
 })
