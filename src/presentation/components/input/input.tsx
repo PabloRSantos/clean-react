@@ -19,10 +19,10 @@ export const Input: React.FC<Props> = (props: Props) => {
   const error = state[`${props.name}Error`]
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setState({
-      ...state,
+    setState(oldState => ({
+      ...oldState,
       [event.target.name]: event.target.value
-    })
+    }))
   }
 
   return (

@@ -74,7 +74,7 @@ export const SignUp: React.FC<Props> = ({
       if (state.isLoading || state.isFormInvalid) {
         return
       }
-      setState({ ...state, isLoading: true })
+      setState(oldState => ({ ...oldState, isLoading: true }))
 
       const account = await addAccount.add({
         name: state.name,
@@ -86,11 +86,11 @@ export const SignUp: React.FC<Props> = ({
       setCurrentAccount(account)
       history.replace('/')
     } catch (error) {
-      setState({
-        ...state,
+      setState(oldState => ({
+        ...oldState,
         isLoading: false,
         mainError: error.message
-      })
+      }))
     }
   }
 

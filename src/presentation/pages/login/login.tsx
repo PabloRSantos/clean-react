@@ -52,7 +52,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
 
     try {
       if (state.isLoading || state.isFormInvalid) return
-      setState({ ...state, isLoading: true })
+      setState(oldState => ({ ...oldState, isLoading: true }))
 
       const account = await authentication.auth({
         email: state.email,
@@ -62,11 +62,11 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
       setCurrentAccount(account)
       history.replace('/')
     } catch (error) {
-      setState({
-        ...state,
+      setState(oldState => ({
+        ...oldState,
         isLoading: false,
         mainError: error.message
-      })
+      }))
     }
   }
 
