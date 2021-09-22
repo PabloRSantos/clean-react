@@ -50,7 +50,10 @@ export const SurveyResult: React.FC<Props> = ({
 
   const onAnswer = (answer: string): void => {
     setState((oldState) => ({ ...oldState, isLoading: true }))
-    saveSurveyResult.save({ answer }).then().catch(handleError)
+    saveSurveyResult.save({ answer })
+      .then((surveyResult) =>
+        setState((oldState) => ({ ...oldState, surveyResult, isLoading: false })))
+      .catch(handleError)
   }
 
   return (
