@@ -24,7 +24,7 @@ export const Result: React.FC<Props> = ({ surveyResult }) => {
           {surveyResult.answers.map(answer => <SurveyResultAnswer key={answer.answer} answer={answer} />)}
         </>
       </FlipMove>
-      <button onClick={goBack}>Voltar</button>
+      <button data-testid="back-button" onClick={goBack}>Voltar</button>
     </div>
   )
 }
