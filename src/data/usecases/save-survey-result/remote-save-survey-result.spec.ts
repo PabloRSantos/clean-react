@@ -1,5 +1,6 @@
 import { HttpStatusCode } from '@/data/protocols/http'
 import { HttpClientSpy, mockRemoteSurveyResultModel } from '@/data/test'
+import { AccessDeniedError } from '@/domain/errors'
 import { mockSaveSurveyResultParams } from '@/domain/test'
 import faker from 'faker'
 import { RemoteSaveSurveyResult } from './remote-save-survey-result'
@@ -32,5 +33,16 @@ describe('RemoteSaveSurveyResult', () => {
     expect(httpClientSpy.url).toBe(url)
     expect(httpClientSpy.method).toBe('put')
     expect(httpClientSpy.body).toBe(saveSurveyResultParams)
+  })
+
+  test('Should throws AccessDeniedError if HttpClient returns 403', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.forbidden
+    }
+
+    const promise = sut.save(mockSaveSurveyResultParams())
+
+    await expect(promise).rejects.toThrow(new AccessDeniedError())
   })
 })
