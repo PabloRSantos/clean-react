@@ -76,10 +76,10 @@ describe('SurveyResult', () => {
   })
 
   describe('save', () => {
-    // const mockAccessDeniedError = (): void => {
-    //   cy.server()
-    //   Http.mockForbiddenError(path, 'GET')
-    // }
+    const mockAccessDeniedError = (): void => {
+      cy.server()
+      Http.mockForbiddenError(path, 'PUT')
+    }
 
     const mockUnexpectedError = (): void => {
       cy.server()
@@ -98,6 +98,12 @@ describe('SurveyResult', () => {
       mockUnexpectedError()
       cy.get('li:nth-child(2)').click()
       cy.getByTestId('error').should('contain.text', 'Algo de errado aconteceu. Tente novamente em breve')
+    })
+
+    it('Should logout on AccessDeniedError', () => {
+      mockAccessDeniedError()
+      cy.get('li:nth-child(2)').click()
+      Helper.testUrl('/login')
     })
   })
 })
