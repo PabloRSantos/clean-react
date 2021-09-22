@@ -17,7 +17,7 @@ export const Result: React.FC<Props> = ({ surveyResult }) => {
     <div className={Styles.resultWrap}>
       <hgroup>
         <Calendar date={surveyResult.date} className={Styles.calendarWrap}/>
-        <h2>{surveyResult.question}</h2>
+        <h2 data-testid="question">{surveyResult.question}</h2>
       </hgroup>
       <FlipMove data-testid="answers" className={Styles.answersList}>
         <>
